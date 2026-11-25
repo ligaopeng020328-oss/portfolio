@@ -4,10 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>李高鹏 | 视觉设计师 Portfolio</title>
+
+    <!-- 首屏可见的 3 张作品封面：页面一打开就与 JS 并行请求 -->
+    <link rel="preload" as="image" type="image/webp" href="projects/thumb/SLD1S.webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="projects/thumb/FSC01W1.webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="projects/thumb/FSXL2.webp" fetchpriority="high" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/portfolio/assets/index-CUh7QN3x.js"></script>
+    <!-- 字体不阻塞渲染：先出内容，字体到了再替换 -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" />
+    </noscript>
+    <script type="module" crossorigin src="/portfolio/assets/index-BrSl3owp.js"></script>
     <link rel="stylesheet" crossorigin href="/portfolio/assets/index-B1aw2os5.css">
   </head>
   <body>
