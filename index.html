@@ -12,7 +12,6 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- 字体不阻塞渲染：先出内容，字体到了再替换 -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" />
     <link
       rel="stylesheet"
@@ -23,10 +22,79 @@
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" />
     </noscript>
+
+    <!-- 骨架屏：JS + React 加载前先显示，避免白屏；图片 preload 后立即显示 -->
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; background: #0a0d14; }
+      #boot-splash {
+        position: fixed; inset: 0; z-index: 9999;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        background: #0a0d14; color: #fff;
+        font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+        animation: bootFade 0.6s ease forwards 0.05s;
+      }
+      @keyframes bootFade { to { opacity: 0; visibility: hidden; } }
+      .boot-title {
+        font-size: clamp(40px, 5vw, 80px); font-weight: 900;
+        letter-spacing: -0.02em; line-height: 1;
+        background: linear-gradient(135deg, #fff 0%, #8899aa 100%);
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      .boot-sub { margin-top: 12px; font-size: 14px; color: rgba(255,255,255,0.4); letter-spacing: 0.3em; text-transform: uppercase; }
+      .boot-thumbs {
+        margin-top: 48px; display: flex; gap: 12px; opacity: 0;
+        animation: bootThumbs 0.8s ease forwards 0.15s;
+      }
+      @keyframes bootThumbs { to { opacity: 1; } }
+      .boot-thumbs img {
+        width: 72px; height: 72px; border-radius: 10px; object-fit: cover;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        background: #151a24;
+      }
+      .boot-dots { margin-top: 32px; display: flex; gap: 6px; opacity: 0.3; }
+      .boot-dots span { width: 5px; height: 5px; border-radius: 50%; background: #fff; animation: bootPulse 1.2s infinite; }
+      .boot-dots span:nth-child(2) { animation-delay: 0.2s; }
+      .boot-dots span:nth-child(3) { animation-delay: 0.4s; }
+      @keyframes bootPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 1; } }
+    </style>
     <script type="module" crossorigin src="/portfolio/assets/index-BrSl3owp.js"></script>
     <link rel="stylesheet" crossorigin href="/portfolio/assets/index-B1aw2os5.css">
   </head>
   <body>
+    <!-- React 挂载点（保持空以便 hydrate 成功） -->
     <div id="root"></div>
+
+    <!-- 首屏骨架：HTML 解析完立即显示，不依赖 JS -->
+    <div id="boot-splash" aria-hidden="true">
+      <div class="boot-title">李高鹏</div>
+      <div class="boot-sub">VISUAL · DESIGN · PORTFOLIO</div>
+      <div class="boot-thumbs">
+        <img src="projects/thumb/SLD1S.webp" alt="" />
+        <img src="projects/thumb/FSC01W1.webp" alt="" />
+        <img src="projects/thumb/FSXL2.webp" alt="" />
+      </div>
+      <div class="boot-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <script>
+      // React 首次 render 后移除骨架屏（加个小过渡）
+      const boot = document.getElementById('boot-splash');
+      const hideBoot = () => {
+        if (!boot) return;
+        boot.style.transition = 'opacity 0.35s ease, visibility 0.35s ease';
+        boot.style.opacity = '0';
+        boot.style.visibility = 'hidden';
+        setTimeout(() => boot.remove(), 400);
+      };
+      // 3 秒兜底（JS 挂了也不让骨架一直显示）
+      setTimeout(hideBoot, 3000);
+      // 等 React render 完立即隐藏
+      const mo = new MutationObserver(() => {
+        if (document.getElementById('root')?.children.length > 0) hideBoot();
+      });
+      mo.observe(document.getElementById('root'), { childList: true });
+    </script>
+
   </body>
 </html>
